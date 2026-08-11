@@ -1,4 +1,4 @@
-import brute_force_solver
+import dataset.xy.xy_brute_force_solver as xy_brute_force_solver
 import xy_model
 
 
@@ -7,13 +7,13 @@ def compare_observables(param_sets):
     print("-" * 90)
 
     for Jx, Jy, h, n in param_sets:
-        bf_energy = brute_force_solver.energy_per_site(Jx, Jy, h, n)
+        bf_energy = xy_brute_force_solver.energy_per_site(Jx, Jy, h, n)
         xy_energy = xy_model.energy_per_site(Jx, Jy, h, n)
 
-        bf_mag = brute_force_solver.magnetization(Jx, Jy, h, n)
+        bf_mag = xy_brute_force_solver.magnetization(Jx, Jy, h, n)
         xy_mag = xy_model.magnetization(Jx, Jy, h, n)
 
-        bf_ent = brute_force_solver.entanglement_entropy(Jx, Jy, h, n)
+        bf_ent = xy_brute_force_solver.entanglement_entropy(Jx, Jy, h, n)
         xy_ent = xy_model.entanglement_entropy(Jx, Jy, h, n)
 
         print(f"params: Jx={Jx}, Jy={Jy}, h={h}, n={n}")

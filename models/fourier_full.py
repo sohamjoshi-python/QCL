@@ -1,3 +1,4 @@
+import heapq
 import numpy as np
 from itertools import product
 
@@ -8,12 +9,36 @@ def all_frequencies(d, L):
     return list(product(range(-L, L + 1), repeat=d))
 
 def low_norm_frequencies(d, L, n_freqs):
-    """Lowest-norm frequency vectors, up to n_freqs (excluding zero vector)."""
-    all_k = all_frequencies(d, L)
-    # Sort by norm, then lexicographically for ties
-    all_k.sort(key=lambda k: (sum(ki**2 for ki in k), k))
-    # Always include the zero vector (bias), then take n_freqs total
-    return all_k[:n_freqs]
+    """Lowest-norm frequency vectors, up to n_freqs (including the zero vector).
+
+    Uses a best-first (Dijkstra-like) expansion from the zero vector so that we
+    never materialize the full (2L+1)^d grid. Vectors are yielded in ascending
+    (squared-norm, tuple) order — identical to sorting ``all_frequencies`` by
+    that key — which keeps this a drop-in replacement even at large d.
+    """
+    if n_freqs <= 0:
+        return []
+
+    zero = (0,) * d
+    # Heap entries: (squared_norm, tuple). The tuple is the secondary sort key,
+    # matching the lexicographic tie-break of the original implementation.
+    heap = [(0, zero)]
+    visited = {zero}
+    result = []
+
+    while heap and len(result) < n_freqs:
+        sq, k = heapq.heappop(heap)
+        result.append(k)
+        for j in range(d):
+            for step in (1, -1):
+                kj = k[j] + step
+                if -L <= kj <= L:
+                    nk = k[:j] + (kj,) + k[j + 1:]
+                    if nk not in visited:
+                        visited.add(nk)
+                        heapq.heappush(heap, (sq - k[j] ** 2 + kj ** 2, nk))
+
+    return result
 
 
 # ── 2. Build design matrix ────────────────────────────────────────
@@ -78,6 +103,7 @@ def fourier_fit_and_eval(X_train, y_train, X_test, y_test, freq_vectors, label="
         "train_nmse": train_nmse,
         "test_nmse": test_nmse,
         "n_params": n_cols,
+        "coeffs": coeffs,
     }
 
 

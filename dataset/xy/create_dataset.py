@@ -34,6 +34,15 @@ for n in [4, 8, 12, 16]:
         for i in range(len(X))
     ])
 
+    # Rescale each input feature to (0, 2pi) using its sampling range so that
+    # QCL (and the Fourier/MLP baselines) all see inputs on a common angular
+    # scale spanning a full period. Labels are computed above from the physical
+    # parameters, so the physics is unaffected.
+    X_scaled = np.empty_like(X)
+    for j, (lo, hi) in enumerate(ranges.values()):
+        X_scaled[:, j] = (X[:, j] - lo) / (hi - lo) * (2 * np.pi)
+    X = X_scaled
+
     # Split
     X_train, X_test = X[:n_train], X[n_train:n_train+n_test]
     y_train_E, y_test_E = energies[:n_train], energies[n_train:n_train+n_test]

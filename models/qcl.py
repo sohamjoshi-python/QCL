@@ -5,9 +5,16 @@ import pennylane.numpy as np
 def build_qcl(n_qubits, n_layers):
     """Build a QCL circuit. Returns (circuit_fn, n_params)."""
     n_params = 3 * n_qubits * n_layers  # 3 rotations per qubit per layer
-    dev = qml.device("default.qubit", wires=n_qubits)
+    # lightning.qubit + adjoint is ~6-7x faster than default.qubit + backprop
+    # for this circuit; fall back to default.qubit if lightning is unavailable.
+    try:
+        dev = qml.device("lightning.qubit", wires=n_qubits)
+        diff_method = "adjoint"
+    except qml.DeviceError:
+        dev = qml.device("default.qubit", wires=n_qubits)
+        diff_method = "backprop"
 
-    @qml.qnode(dev, diff_method="backprop")
+    @qml.qnode(dev, diff_method=diff_method)
     def circuit(params, x):
         # params: shape (n_layers, n_qubits, 3) — trainable angles
         # x: shape (n_qubits,) — input features

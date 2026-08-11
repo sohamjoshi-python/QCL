@@ -29,5 +29,26 @@ pip-delete-this-directory.txt
 
 # Generated experiment output
 experiment_results.csv
+# Stray/duplicate results written next to the runner
+# (canonical copy lives under results/hubbard_static/)
+scripts/hubbard_experiment_results.csv
+
+# Bundled archives (e.g. results.zip snapshots)
+*.zip
+
+# Scratch plots written to the repo root by the quench scripts
+/quench_dynamics.png
+/quench_dynamics_hubbard.png
+
+# Scratch / benchmarking helpers (dev-only, not part of the pipeline)
+scripts/_bench_qcl.py
+
+# Run logs (also covered by *.log; listed explicitly for clarity)
 *.log
-venv/
+scripts/_xytd_run.log
+scripts/_xy_run.log
+scripts/_hubbard_run.log
+scripts/_xydis_run.log
+scripts/_hubdis_run.log
+dataset/xy_disordered/_gen.log
+dataset/hubbard_disordered/_gen.log

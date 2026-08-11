@@ -13,15 +13,14 @@ def PauliZ():
 
 
 def A(Jx, Jy, h, n):
+    """h can be a scalar (uniform field) or an array of length n (disordered)."""
+    h_arr = np.full(n, h) if np.isscalar(h) else np.asarray(h)
     matrix = np.zeros((n, n), dtype=complex)
     for i in range(n):
-        for j in range(n):
-            if i == j:
-                matrix[i, j] = 2 * h
-            elif i == j + 1 or j == i + 1:
-                matrix[i, j] = -Jx - Jy
-            else:
-                matrix[i, j] = 0
+        matrix[i, i] = 2 * h_arr[i]
+        if i < n - 1:
+            matrix[i, i + 1] = -Jx - Jy
+            matrix[i + 1, i] = -Jx - Jy
 
     return matrix
 
