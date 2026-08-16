@@ -95,12 +95,16 @@ if __name__ == "__main__":
     n_significant = np.sum(power > 0.01 * power.max())
     print(f"Number of significant frequency components: {n_significant}")
 
-    plt.figure(figsize=(12, 4))
-    plt.plot(t_values, obs, linewidth=0.5)
-    plt.xlabel("Time t")
-    plt.ylabel("double occupancy")
-    plt.title(f"Quench dynamics: Hubbard model n={n}, t={t_hop}, U={U}")
+    out_dir = (pathlib.Path(__file__).resolve().parent.parent.parent
+               / "results" / "hubbard_time_dep" / "images")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "quench_hubbard.pdf"
+
+    plt.figure(figsize=(6, 4))
+    plt.plot(t_values, obs, linewidth=0.8, color='#1f77b4')
+    plt.xlabel(r"Time $t$", fontsize=12)
+    plt.ylabel(r"Double occupancy $D(t)$", fontsize=12)
+    plt.tick_params(labelsize=11)
     plt.tight_layout()
-    plt.savefig("quench_dynamics_hubbard.png", dpi=150)
-    plt.show()
-    print("Saved quench_dynamics_hubbard.png")
+    plt.savefig(out_path, dpi=300)
+    print(f"Saved {out_path}")

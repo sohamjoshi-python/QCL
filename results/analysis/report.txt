@@ -1,0 +1,178 @@
+==========================================================================
+EXPERIMENT RESULTS - INTERPRETATION
+==========================================================================
+
+--------------------------------------------------------------------------
+Static XY   (xy_static, target = entanglement entropy)
+--------------------------------------------------------------------------
+model                       sweep   n    test nMSE (mean+/-std)
+Fourier full (L=3)              4   1        0.1755 +/- 0.0000  
+Fourier full (L=3)              8   1        0.1628 +/- 0.0000  
+Fourier full (L=3)             12   1        0.1582 +/- 0.0000  
+Fourier full (L=3)             16   1        0.1609 +/- 0.0000  
+Fourier param-matched           4   1        0.3150 +/- 0.0000  
+Fourier param-matched           8   1        0.3094 +/- 0.0000  
+Fourier param-matched          12   1        0.2962 +/- 0.0000  
+Fourier param-matched          16   1        0.3012 +/- 0.0000  
+MLP                             4   3        0.0304 +/- 0.0023  
+MLP                             8   3        0.0316 +/- 0.0016  
+MLP                            12   3        0.0294 +/- 0.0039  
+MLP                            16   3        0.0204 +/- 0.0039  
+QCL                             4   3        0.4509 +/- 0.0470  
+QCL                             8   3        0.4328 +/- 0.0685  
+QCL                            12   3        0.4663 +/- 0.0866  
+QCL                            16   3        0.4506 +/- 0.0776  
+
+  significance tests:
+    QCL_vs_MLP (Welch t)                   sweep=4    stat=  15.494  p=0.00406 **
+    QCL_vs_MLP (Welch t)                   sweep=8    stat=  10.139  p=0.00955 **
+    QCL_vs_MLP (Welch t)                   sweep=12   stat=   8.729  p=0.0127 *
+    QCL_vs_MLP (Welch t)                   sweep=16   stat=   9.587  p=0.0105 *
+    QCL_vs_baseline1.0 (1-sample t)        sweep=4    stat= -20.254  p=0.00243 **
+    QCL_vs_baseline1.0 (1-sample t)        sweep=8    stat= -14.340  p=0.00483 **
+    QCL_vs_baseline1.0 (1-sample t)        sweep=12   stat= -10.673  p=0.00866 **
+    QCL_vs_baseline1.0 (1-sample t)        sweep=16   stat= -12.259  p=0.00659 **
+    QCL_trend_vs_sweep (linregress slope)  sweep=all  stat=   0.001  p=0.85 ns
+
+  figure: results\xy_static\images\xy_static_test_nmse.png
+
+--------------------------------------------------------------------------
+Static Hubbard   (hubbard_static, target = double occupancy)
+--------------------------------------------------------------------------
+model                       sweep   n    test nMSE (mean+/-std)
+Fourier full                    4   1        0.0932 +/- 0.0000  
+Fourier full                    6   1        0.0913 +/- 0.0000  
+Fourier full                    8   1        0.0901 +/- 0.0000  
+Fourier param-matched           4   1        0.2201 +/- 0.0000  
+Fourier param-matched           6   1        0.2145 +/- 0.0000  
+Fourier param-matched           8   1        0.2111 +/- 0.0000  
+MLP                             4   3        0.0017 +/- 0.0003  
+MLP                             6   3        0.0016 +/- 0.0001  
+MLP                             8   3        0.0016 +/- 0.0002  
+QCL                             4   3        0.2375 +/- 0.0277  
+QCL                             6   3        0.2600 +/- 0.0316  
+QCL                             8   3        0.2456 +/- 0.0364  
+
+  significance tests:
+    QCL_vs_MLP (Welch t)                   sweep=4    stat=  14.749  p=0.00456 **
+    QCL_vs_MLP (Welch t)                   sweep=6    stat=  14.156  p=0.00495 **
+    QCL_vs_MLP (Welch t)                   sweep=8    stat=  11.613  p=0.00733 **
+    QCL_vs_baseline1.0 (1-sample t)        sweep=4    stat= -47.714  p=0.000439 ***
+    QCL_vs_baseline1.0 (1-sample t)        sweep=6    stat= -40.542  p=0.000608 ***
+    QCL_vs_baseline1.0 (1-sample t)        sweep=8    stat= -35.895  p=0.000775 ***
+    QCL_trend_vs_sweep (linregress slope)  sweep=all  stat=   0.002  p=0.759 ns
+
+  figure: results\hubbard_static\images\hubbard_static_test_nmse.png
+
+--------------------------------------------------------------------------
+Disordered XY (d = n)   (xy_disordered, target = entanglement entropy)
+--------------------------------------------------------------------------
+model                       sweep   n    test nMSE (mean+/-std)
+Fourier param-matched           4   1        0.3974 +/- 0.0000  
+Fourier param-matched           6   1        0.3788 +/- 0.0000  
+Fourier param-matched           8   1        0.3931 +/- 0.0000  
+MLP                             4   3        0.1522 +/- 0.0088  
+MLP                             6   3        0.2041 +/- 0.0244  
+MLP                             8   3        0.2748 +/- 0.0326  
+QCL                             4   3        0.7816 +/- 0.0783  
+QCL                             6   3        1.0070 +/- 0.1401  
+QCL                             8   3        1.1652 +/- 0.0128  
+
+  significance tests:
+    QCL_vs_MLP (Welch t)                   sweep=4    stat=  13.829  p=0.00469 **
+    QCL_vs_MLP (Welch t)                   sweep=6    stat=   9.776  p=0.00847 **
+    QCL_vs_MLP (Welch t)                   sweep=8    stat=  44.066  p=8.25e-05 ***
+    QCL_vs_baseline1.0 (1-sample t)        sweep=4    stat=  -4.831  p=0.0403 *
+    QCL_vs_baseline1.0 (1-sample t)        sweep=6    stat=   0.086  p=0.939 ns
+    QCL_vs_baseline1.0 (1-sample t)        sweep=8    stat=  22.392  p=0.00199 **
+    QCL_trend_vs_sweep (linregress slope)  sweep=all  stat=   0.096  p=0.00107 **
+
+  figure: results\xy_disordered\images\xy_disordered_test_nmse.png
+
+--------------------------------------------------------------------------
+Disordered Hubbard (d = n)   (hubbard_disordered, target = double occupancy)
+--------------------------------------------------------------------------
+model                       sweep   n    test nMSE (mean+/-std)
+Fourier param-matched           4   1        0.3631 +/- 0.0000  
+Fourier param-matched           6   1        0.3554 +/- 0.0000  
+Fourier param-matched           8   1        0.3293 +/- 0.0000  
+MLP                             4   3        0.0499 +/- 0.0090  
+MLP                             6   3        0.0870 +/- 0.0081  
+MLP                             8   3        0.1489 +/- 0.0198  
+QCL                             4   3        1.2986 +/- 0.4471  
+QCL                             6   3        2.3469 +/- 0.4795  
+QCL                             8   3        2.7666 +/- 0.0871  
+
+  significance tests:
+    QCL_vs_MLP (Welch t)                   sweep=4    stat=   4.836  p=0.0401 *
+    QCL_vs_MLP (Welch t)                   sweep=6    stat=   8.163  p=0.0147 *
+    QCL_vs_MLP (Welch t)                   sweep=8    stat=  50.783  p=0.000199 ***
+    QCL_vs_baseline1.0 (1-sample t)        sweep=4    stat=   1.157  p=0.367 ns
+    QCL_vs_baseline1.0 (1-sample t)        sweep=6    stat=   4.866  p=0.0397 *
+    QCL_vs_baseline1.0 (1-sample t)        sweep=8    stat=  35.145  p=0.000809 ***
+    QCL_trend_vs_sweep (linregress slope)  sweep=all  stat=   0.367  p=0.0025 **
+
+  figure: results\hubbard_disordered\images\hubbard_disordered_test_nmse.png
+
+--------------------------------------------------------------------------
+XY quench dynamics   (xy_time_dep, target = staggered magnetization)
+--------------------------------------------------------------------------
+model                       sweep   n    test nMSE (mean+/-std)
+Fourier full                    3   1        0.7314 +/- 0.0000  
+Fourier full                    6   1        0.7208 +/- 0.0000  
+Fourier full                   10   1        0.5772 +/- 0.0000  
+Fourier full                   20   1        0.0145 +/- 0.0000  
+MLP                           all   3        0.7491 +/- 0.1058  
+QCL                             3   3        0.8419 +/- 0.0953  
+QCL                             6   3        0.8846 +/- 0.1066  
+QCL                            10   3        0.7833 +/- 0.0137  
+QCL                            20   3        0.2333 +/- 0.0250  
+
+  significance tests:
+    QCL_vs_MLP (Welch t)                   sweep=3    stat=   1.130  p=0.322 ns
+    QCL_vs_MLP (Welch t)                   sweep=6    stat=   1.562  p=0.193 ns
+    QCL_vs_MLP (Welch t)                   sweep=10   stat=   0.555  p=0.633 ns
+    QCL_vs_MLP (Welch t)                   sweep=20   stat=  -8.216  p=0.0105 *
+    QCL_vs_baseline1.0 (1-sample t)        sweep=3    stat=  -2.872  p=0.103 ns
+    QCL_vs_baseline1.0 (1-sample t)        sweep=6    stat=  -1.874  p=0.202 ns
+    QCL_vs_baseline1.0 (1-sample t)        sweep=10   stat= -27.422  p=0.00133 **
+    QCL_vs_baseline1.0 (1-sample t)        sweep=20   stat= -53.083  p=0.000355 ***
+    QCL_trend_vs_sweep (linregress slope)  sweep=all  stat=  -0.039  p=1.74e-05 ***
+
+  figure: results\xy_time_dep\images\xy_time_dep_test_nmse.png
+
+--------------------------------------------------------------------------
+Hubbard quench dynamics   (hubbard_time_dep, target = double occupancy)
+--------------------------------------------------------------------------
+model                       sweep   n    test nMSE (mean+/-std)
+Fourier full                    3   1        1.0089 +/- 0.0000  
+Fourier full                    6   1        1.0196 +/- 0.0000  
+Fourier full                   10   1        0.8846 +/- 0.0000  
+Fourier full                   20   1        0.0563 +/- 0.0000  
+MLP                           all   3        0.8601 +/- 0.1322  
+QCL                             3   3        1.0535 +/- 0.0719  
+QCL                             6   3        1.2776 +/- 0.2008  
+QCL                            10   3        1.0782 +/- 0.0694  
+QCL                            20   3        0.3197 +/- 0.0989  
+
+  significance tests:
+    QCL_vs_MLP (Welch t)                   sweep=3    stat=   2.226  p=0.11 ns
+    QCL_vs_MLP (Welch t)                   sweep=6    stat=   3.008  p=0.0478 *
+    QCL_vs_MLP (Welch t)                   sweep=10   stat=   2.531  p=0.0847 ns
+    QCL_vs_MLP (Welch t)                   sweep=20   stat=  -5.671  p=0.00599 **
+    QCL_vs_baseline1.0 (1-sample t)        sweep=3    stat=   1.289  p=0.326 ns
+    QCL_vs_baseline1.0 (1-sample t)        sweep=6    stat=   2.394  p=0.139 ns
+    QCL_vs_baseline1.0 (1-sample t)        sweep=10   stat=   1.952  p=0.19 ns
+    QCL_vs_baseline1.0 (1-sample t)        sweep=20   stat= -11.916  p=0.00697 **
+    QCL_trend_vs_sweep (linregress slope)  sweep=all  stat=  -0.051  p=0.000313 ***
+
+  figure: results\hubbard_time_dep\images\hubbard_time_dep_test_nmse.png
+
+headline figure: results\analysis\disordered_qcl_vs_mlp.png
+
+==========================================================================
+ARTIFACTS
+==========================================================================
+  summary statistics : results\analysis\summary_statistics.csv
+  significance tests : results\analysis\significance_tests.csv
+  figures            : 7 written

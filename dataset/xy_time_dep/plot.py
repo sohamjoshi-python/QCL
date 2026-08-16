@@ -1,3 +1,4 @@
+import pathlib
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     t_values = np.linspace(0, 20, 2000)
 
     print(f"Computing quench dynamics: n={n}, Jx={Jx}, Jy={Jy}, h={h}")
-    print(f"Initial state: Néel |↑↓↑↓...⟩")
+    print(f"Initial state: Neel |up,dn,up,dn,...>")
     print(f"Time points: {len(t_values)}")
 
     mz = quench_dynamics(Jx, Jy, h, n, t_values)
@@ -92,12 +93,16 @@ if __name__ == "__main__":
     n_significant = np.sum(power > 0.01 * power.max())
     print(f"Number of significant frequency components: {n_significant}")
 
-    plt.figure(figsize=(12, 4))
-    plt.plot(t_values, mz, linewidth=0.5)
-    plt.xlabel("Time t")
-    plt.ylabel("⟨σ_z⟩(t)")
-    plt.title(f"Quench dynamics: XY model n={n}, Jx={Jx}, Jy={Jy}, h={h}")
+    out_dir = (pathlib.Path(__file__).resolve().parent.parent.parent
+               / "results" / "xy_time_dep" / "images")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "quench_xy.pdf"
+
+    plt.figure(figsize=(6, 4))
+    plt.plot(t_values, mz, linewidth=0.8, color='#1f77b4')
+    plt.xlabel(r"Time $t$", fontsize=12)
+    plt.ylabel(r"Staggered magnetization $M_{\mathrm{stag}}(t)$", fontsize=12)
+    plt.tick_params(labelsize=11)
     plt.tight_layout()
-    plt.savefig("quench_dynamics.png", dpi=150)
-    plt.show()
-    print("Saved quench_dynamics.png")
+    plt.savefig(out_path, dpi=300)
+    print(f"Saved {out_path}")

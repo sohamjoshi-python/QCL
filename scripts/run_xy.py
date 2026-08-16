@@ -149,7 +149,8 @@ def run_experiment(output_csv, n_values=None):
     if n_values is None:
         n_values = [4, 8, 12, 16]
 
-    output_path = pathlib.Path(__file__).resolve().parent / output_csv
+    output_path = pathlib.Path(__file__).resolve().parent.parent / output_csv
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     print(f"Writing experiment CSV to: {output_path}")
 
     fieldnames = [
@@ -225,4 +226,5 @@ def run_experiment(output_csv, n_values=None):
 
 
 if __name__ == "__main__":
-    run_experiment("experiment_results.csv", n_values=[4, 8, 12, 16])
+    run_experiment("results/xy_static/xy_experiment_results.csv",
+                   n_values=[4, 8, 12, 16])

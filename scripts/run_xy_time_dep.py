@@ -104,6 +104,7 @@ def run_qcl(X_tr, y_tr, X_te, y_te, n_layers, seed):
         "seed": seed,
         "train_nmse": train_nmse,
         "test_nmse": test_nmse,
+        "pred_test": np.array(pred_te),
     }
 
 
@@ -111,11 +112,21 @@ def run_qcl(X_tr, y_tr, X_te, y_te, n_layers, seed):
 
 results = []
 
+# Predictions on the test set (seed 0) captured per config, for overlay plots.
+L_values = [3, 6, 10, 20]
+qcl_pred_by_L = {}
+fourier_pred_by_L = {}
+mlp_pred_test = None
+
 # QCL at several layer depths
-for L in [3, 6, 10, 20]:
+for L in L_values:
     for seed in [0, 1, 2]:
         print(f"\n--- QCL L={L}, seed={seed} ---")
         res = run_qcl(X_train, y_train, X_test, y_test, L, seed)
+        if seed == 0:
+            qcl_pred_by_L[L] = res.pop("pred_test")
+        else:
+            res.pop("pred_test", None)
         results.append(res)
         print(f"    test nMSE = {res['test_nmse']:.4f}")
 
@@ -127,6 +138,8 @@ for seed in [0, 1, 2]:
         hidden_layer_sizes=(32, 32), max_iter=500,
         random_state=seed,
     )
+    if seed == 0:
+        mlp_pred_test = mlp_res["model"].predict(X_test)
     results.append({
         "model": "MLP",
         "n_params": mlp_res["param_count"],
@@ -137,7 +150,7 @@ for seed in [0, 1, 2]:
     print(f"    test nMSE = {mlp_res['test_nmse']:.4f}")
 
 # Fourier baselines at multiple L values
-for L in [3, 6, 10, 20]:
+for L in L_values:
     print(f"\n--- Fourier full L={L} ---")
     freqs = fourier.all_frequencies(1, L)
     res = fourier.fourier_fit_and_eval(
@@ -145,6 +158,9 @@ for L in [3, 6, 10, 20]:
         freqs, label=f"Full L={L}"
     )
     if res:
+        fourier_pred_by_L[L] = (
+            fourier.fourier_design_matrix(X_test, freqs) @ res["coeffs"]
+        )
         results.append({
             "model": f"Fourier full (L={L})",
             "n_params": res["n_params"],
@@ -172,7 +188,45 @@ with open(results_csv, "w", newline="", encoding="utf-8") as f:
 print(f"\nSaved results CSV to {results_csv} ({len(results)} rows)")
 
 
-# ── 5. Summary ────────────────────────────────────────────────────
+# ── 5. Overlay plots (saved, not shown) ───────────────────────────
+
+import matplotlib
+matplotlib.use("Agg")  # save only, never open a window
+import matplotlib.pyplot as plt
+
+images_dir = results_dir / "images"
+images_dir.mkdir(parents=True, exist_ok=True)
+
+# Sort test points by time and map the rescaled input back to real time t.
+order = np.argsort(X_test[:, 0])
+t_real = t_min + (X_test[order, 0] / (2 * np.pi)) * (t_max - t_min)
+y_actual = y_test[order]
+
+for L in L_values:
+    plt.figure(figsize=(12, 4))
+    plt.plot(t_real, y_actual, color="black", linewidth=1.6,
+             label="actual", zorder=5)
+    if L in qcl_pred_by_L:
+        plt.plot(t_real, qcl_pred_by_L[L][order], linewidth=1.0,
+                 alpha=0.9, label=f"QCL (L={L})")
+    if mlp_pred_test is not None:
+        plt.plot(t_real, mlp_pred_test[order], linewidth=1.0,
+                 alpha=0.9, label="MLP")
+    if L in fourier_pred_by_L:
+        plt.plot(t_real, fourier_pred_by_L[L][order], linewidth=1.0,
+                 alpha=0.9, label=f"Fourier (L={L})")
+    plt.xlabel("Time t")
+    plt.ylabel("staggered magnetization (standardized to [-1, 1])")
+    plt.title(f"XY quench: model predictions vs actual (L={L})")
+    plt.legend(loc="best", fontsize=8)
+    plt.tight_layout()
+    out_path = images_dir / f"overlay_L{L}.png"
+    plt.savefig(out_path, dpi=150)
+    plt.close()
+    print(f"Saved {out_path}")
+
+
+# ── 6. Summary ────────────────────────────────────────────────────
 
 print("\n" + "=" * 60)
 print("SUMMARY: Quench dynamics (staggered magnetization, d=1)")
