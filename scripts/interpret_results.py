@@ -371,6 +371,9 @@ def plot_experiment(exp, records):
     out_dir.mkdir(parents=True, exist_ok=True)
     base = out_dir / f"{exp['key']}_test_nmse"
     fig.savefig(base.with_suffix(".png"), dpi=150)
+    # PDF is the paper deliverable: drop the title (the LaTeX caption covers it).
+    ax.set_title("")
+    fig.tight_layout()
     fig.savefig(base.with_suffix(".pdf"), dpi=300)
     plt.close(fig)
     return base.with_suffix(".png")
@@ -408,6 +411,9 @@ def plot_disordered_overview(all_records):
     ANALYSIS_DIR.mkdir(parents=True, exist_ok=True)
     base = ANALYSIS_DIR / "disordered_qcl_vs_mlp"
     fig.savefig(base.with_suffix(".png"), dpi=150)
+    # PDF is the paper deliverable: drop the title (the LaTeX caption covers it).
+    ax.set_title("")
+    fig.tight_layout()
     fig.savefig(base.with_suffix(".pdf"), dpi=300)
     plt.close(fig)
     return base.with_suffix(".png")
